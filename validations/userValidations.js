@@ -1,20 +1,24 @@
+const Joi = require('joi');
 
-const joi = require('joi');
+const validationR = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string()
+    .min(6)
+    .pattern(/[A-Z]/) // تأكد إن فيه حرف كبير واحد على الأقل
+    .required(),
+  name: Joi.string().required(),
+  phonenumber: Joi.string()
+    .min(10)
+    .max(11)
+    .required()
+});
 
-// body ={    email, name, passord , phone number,}
-const validationR = joi.object({
-    email:joi.string().email.require(),
-    password:joi.string.require().min(6).uppercase(1),
-    name:joi.string.require(),
-    phonenumber:joi.number().min(10).max(11).require()
+const validationLogin = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string()
+    .min(6)
+    .pattern(/[A-Z]/)
+    .required()
+});
 
-})
-
-
-const validationLogin=joi.object({
-    email:joi.string().email.require(),
-    password:joi.string.require().min(6).uppercase(1),
-    
-})
-
-module.exports={validationLogin, validationR}
+module.exports = { validationLogin, validationR };
