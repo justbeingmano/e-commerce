@@ -1,7 +1,7 @@
-
-const router = require("express").Router();
-const { Product } = require("../models/productModel");
-const { User } = require("../models/userModel");
+import express from "express";
+const router = express.Router();
+import { Product } from "../models/productModel.js";
+import { User } from "../models/userModel.js";
 
 // Middleware to verify JWT token
 const verifyToken = async (req, res, next) => {
@@ -138,4 +138,4 @@ router.patch("/:id", verifyToken, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 const validationR = Joi.object({
   email: Joi.string().email().required(),
@@ -21,4 +21,4 @@ const validationLogin = Joi.object({
     .required()
 });
 
-module.exports = { validationLogin, validationR };
+export { validationLogin, validationR };

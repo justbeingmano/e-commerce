@@ -1,11 +1,12 @@
-const router = require("express").Router();
-const mongoose = require("mongoose");
-const Joi = require("joi");
-const { User } = require("../models/userModel");
-const {
+import express from "express";
+const router = express.Router();
+import mongoose from "mongoose";
+import Joi from "joi";
+import { User } from "../models/userModel.js";
+import {
   validationR,
   validationLogin,
-} = require("../validations/userValidations");
+} from "../validations/userValidations.js";
 
 // map validation names to the ones the routes expect
 const registerVaildation = validationR;
@@ -53,4 +54,4 @@ router.post("/login", async (req, res) => {
   } catch (error) {}
 });
 
-module.exports = router;
+export default router;

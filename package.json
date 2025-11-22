@@ -7,6 +7,6 @@
     "mongoose": "^8.19.2"
     
   },
-  "type": "commonjs"
+  "type": "module"
 
 }

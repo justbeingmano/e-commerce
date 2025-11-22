@@ -1,12 +1,13 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const path = require('path');
-const connectDB = require('./databaseconnection/connection');
-const authRoutes = require('./Routes/authRoutes');
-const productRoutes = require('./Routes/productRoutes');
+import express from 'express';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import connectDB from './databaseconnection/connection.js';
+import authRoutes from './Routes/authRoutes.js';
+import productRoutes from './Routes/productRoutes.js';
 
-const {fileURLToPath}=require("url")
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config();
@@ -24,7 +25,7 @@ app.use("/api/products", productRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Catch-all handler: send back React's index.html file for any non-API routes
-app.get('/*', (req, res) => {
+app.get('/*splat', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
