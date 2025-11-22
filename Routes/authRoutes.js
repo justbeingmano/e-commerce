@@ -8,7 +8,6 @@ import {
   validationLogin,
 } from "../validations/userValidations.js";
 
-// map validation names to the ones the routes expect
 const registerVaildation = validationR;
 const loginVaildation = validationLogin;
 router.post("/register", async (req, res) => {
@@ -18,7 +17,6 @@ router.post("/register", async (req, res) => {
       res.status(400).json({ message: error.message });
     }
 
-    // User => Email
     const userExist = await User.findByEmail(value.email);
     if (userExist) {
       res.status(400).json({ message: "invalid data" });
@@ -26,7 +24,6 @@ router.post("/register", async (req, res) => {
 
     const user = await User.create(value);
 
-    // Generate Token
     const token = user.generateToken();
     res.status(201).json({ message: "user created...", data: { token } });
   } catch (error) {}
