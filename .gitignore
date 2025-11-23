@@ -22,6 +22,10 @@ lib-cov
 coverage
 *.lcov
 
+# Dependency directories
+node_modules/
+jspm_packages/
+
 # nyc test coverage
 .nyc_output
 
