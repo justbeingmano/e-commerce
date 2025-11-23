@@ -19,7 +19,7 @@ router.post("/register", async (req, res) => {
 
     const userExist = await User.findByEmail(value.email);
     if (userExist) {
-      res.status(400).json({ message: "invalid data" });
+      res.status(404).json({ message: "user not founded" });
     }
 
     const user = await User.create(value);
