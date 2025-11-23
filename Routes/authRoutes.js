@@ -13,18 +13,22 @@ router.post("/register", async (req, res) => {
   try {
     const { error, value } = registerVaildation.validate(req.body);
     if (error) {
-      res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message });
     }
-    const userExist = await User.findByEmail(value.email);
+
+    const userExist = await User.findOne({ email: value.email });
     if (userExist) {
-      res.status(404).json({ message: "user not founded" });
+      return res.status(400).json({ message: "user already exists" });
     }
 
     const user = await User.create(value);
+    const token = generateToken(user);
 
-    const token = user.generateToken();
-    res.status(201).json({ message: "user created...", data: { token } });
-  } catch (error) {}
+    return res.status(201).json({ message: "user created...", data: { token } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 // LOGIN
 router.post("/login", async (req, res) => {
