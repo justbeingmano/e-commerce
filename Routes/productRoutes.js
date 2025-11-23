@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import { Product } from "../models/productModel.js";
-import { User } from "../models/userModel.js";
+import  User  from "../models/userModel.js";
 
 // Middleware to verify JWT token
 const verifyToken = async (req, res, next) => {

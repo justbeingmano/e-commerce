@@ -1,8 +1,7 @@
 import express from "express";
 const router = express.Router();
-import mongoose from "mongoose";
-import Joi from "joi";
-import { User } from "../models/userModel.js";
+import jwt from "jsonwebtoken";
+import  User  from "../models/userModel.js";
 import {
   validationR,
   validationLogin,
@@ -10,45 +9,57 @@ import {
 
 const registerVaildation = validationR;
 const loginVaildation = validationLogin;
-router.post("/register", async (req, res) => {
-  try {
-    const { error, value } = registerVaildation.validate(req.body);
-    if (error) {
-      res.status(400).json({ message: error.message });
-    }
+// router.post("/register", async (req, res) => {
+//   try {
+//     const { error, value } = registerVaildation.validate(req.body);
+//     if (error) {
+//       res.status(400).json({ message: error.message });
+//     }
+//     const userExist = await User.findByEmail(value.email);
+//     if (userExist) {
+//       res.status(404).json({ message: "user not founded" });
+//     }
 
-    const userExist = await User.findByEmail(value.email);
-    if (userExist) {
-      res.status(404).json({ message: "user not founded" });
-    }
+//     const user = await User.create(value);
 
-    const user = await User.create(value);
-
-    const token = user.generateToken();
-    res.status(201).json({ message: "user created...", data: { token } });
-  } catch (error) {}
-});
-
+//     const token = user.generateToken();
+//     res.status(201).json({ message: "user created...", data: { token } });
+//   } catch (error) {}
+// });
+// LOGIN
 router.post("/login", async (req, res) => {
-  try {
-    const { error, value } = loginVaildation.validate(req.body);
-    if (error) {
-      res.status(400).json({ message: error.details[0].message });
-    }
+      try {
+    const { email, password } = req.body;
 
-    const userExist = await User.findByEmail(value.email);
-    if (!userExist) {
-      res.status(400).json({ message: "invalid credentials" });
-    }
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "Invalid email or password" });
 
-    const isValid = await userExist.comparePassword(value.password);
-    if (!isValid) {
-      res.status(400).json({ message: "invalid credentials" });
-    }
+    const isMatch = await user.matchPassword(password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid email or password" });
 
-    const token = userExist.generateToken();
-    res.json({ message: "user logged", data: { token } });
-  } catch (error) {}
+    return res.json({
+      message: "Login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+      token: generateToken(user),
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
-
+//generateToken
+export const generateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user._id,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+};
 export default router;
