@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import jwt from "jsonwebtoken";
+import { generateToken } from "../models/userModel.js";
 import  User  from "../models/userModel.js";
 import {
   validationR,
@@ -29,19 +29,27 @@ router.post("/register", async (req, res) => {
 // LOGIN
 router.post("/login", async (req, res) => {
   try {
+
     const { error, value } = loginVaildation.validate(req.body);
-    if (error) return res.status(400).json({ message: error.message });
+    if (error) {
+      return res.status(400).json({ message: error.message });
+    }
 
 
     const user = await User.findOne({ email: value.email });
-    if (!user)
+    if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
+    }
+
 
     const isMatch = await user.matchPassword(value.password);
-    if (!isMatch)
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
+    }
+
 
     const token = generateToken(user);
+
 
     return res.json({
       message: "Login successful",
@@ -54,17 +62,8 @@ router.post("/login", async (req, res) => {
       token,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
-});//generateToken
-export const generateToken = (user) => {
-  return jwt.sign(
-    {
-      id: user._id,
-      role: user.role,
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-};
+});
 export default router;

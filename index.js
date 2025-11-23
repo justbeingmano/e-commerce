@@ -1,6 +1,5 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './databaseconnection/connection.js';
@@ -16,8 +15,6 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-
-// API Routes (must come before static files)
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 
