@@ -9,6 +9,7 @@ import {
 
 const registerVaildation = validationR;
 const loginVaildation = validationLogin;
+//register
 router.post("/register", async (req, res) => {
   try {
     const { error, value } = registerVaildation.validate(req.body);
