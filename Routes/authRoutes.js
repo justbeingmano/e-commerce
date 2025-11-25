@@ -43,13 +43,18 @@ router.post("/login", async (req, res) => {
 
     const user = await User.findOne({ email: value.email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      return res.status(400).json({ message: "Invalid email " });
     }
 
 
     const isMatch = await user.matchPassword(value.password);
+    console.log('DEBUG login entered password:', value.password);
+    console.log('DEBUG stored hashed password:', user.password);
+    console.log('DEBUG bcrypt compare result (isMatch):', isMatch);
+
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
+      console.log(`${value.password}`);
+      return res.status(400).json({ message: "Invalid  password" });
     }
 
 
