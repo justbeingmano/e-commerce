@@ -27,7 +27,7 @@ const verifyToken = async (req, res, next) => {
 // Get all products
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.findActive();
+    const products = await Product.find();
     res.json({ message: "Products retrieved successfully", data: products });
   } catch (error) {
     res.status(500).json({ message: "Error retrieving products", error: error.message });
@@ -41,12 +41,11 @@ router.get("/:id", async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.json({ message: "Product retrieved successfully", data: product });
+    res.status(201).json({ message: "Product retrieved successfully", data: product });
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving product", error: error.message });
+    res.status(500).json({ message: "Error ya 8ali", error: error.message });
   }
 });
-
 // Create new product
 router.post("/", async (req, res) => {
   try {
