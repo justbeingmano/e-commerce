@@ -22,7 +22,7 @@ userSchema.pre("save", async function (next) {
 
 // Compare password
 userSchema.methods.matchPassword = function (enteredPassword) {
-  return bcrypt.compare(enteredPassword, this.password);
+  return bcrypt.compare(enteredPassword, this.password); 
 };
 
 // Generate JWT token
