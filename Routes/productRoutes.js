@@ -48,7 +48,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create new product
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { name, description, price, category, stock } = req.body;
     
@@ -58,7 +58,6 @@ router.post("/", verifyToken, async (req, res) => {
       price,
       category,
       stock: stock || 0,
-      createdBy: req.user._id
     });
 
     const savedProduct = await product.save();
