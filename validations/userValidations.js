@@ -10,7 +10,9 @@ const validationR = Joi.object({
   phonenumber: Joi.string()
     .min(10)
     .max(11)
-    .required()
+    .required(),
+   
+
 });
 
 const validationLogin = Joi.object({

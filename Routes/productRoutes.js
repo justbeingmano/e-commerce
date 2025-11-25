@@ -2,27 +2,8 @@ import express from "express";
 const router = express.Router();
 import authMiddleware from "../middleware/auth.middleware.js";
 import { Product } from "../models/productModel.js";
-import  User  from "../models/userModel.js";
 
 
-// Middleware to verify JWT token
-const verifyToken = async (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  
-  if (!token) {
-    return res.status(401).json({ message: 'Access denied. No token provided.' });
-  }
-
-  try {
-    // In a real app, you'd verify the JWT token here
-    // For now, we'll just check if the token exists
-    const user = await User.findOne({}); // This is a placeholder
-    req.user = user;
-    next();
-  } catch (error) {
-    res.status(400).json({ message: 'Invalid token.' });
-  }
-};
 
 // Get all products
 router.get("/", async (req, res) => {
@@ -67,7 +48,7 @@ router.post("/", async (req, res) => {
 });
 
 // Update product
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/:id",  async (req, res) => {
   try {
     const { name, description, price, category, stock, isActive } = req.body;
     
@@ -76,10 +57,7 @@ router.put("/:id", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Check if user owns the product
-    if (product.createdBy.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: "Access denied. You can only update your own products." });
-    }
+   
 
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
@@ -93,51 +71,22 @@ router.put("/:id", verifyToken, async (req, res) => {
   }
 });
 
-// // Delete product (soft delete)
-// router.delete("/:id", verifyToken, async (req, res) => {
-//   try {
-//     const product = await Product.findById(req.params.id);
-//     if (!product) {
-//       return res.status(404).json({ message: "Product not found" });
-//     }
+// Delete product (soft delete)
+router.delete("/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
 
-//     // Check if user owns the product
-//     if (product.createdBy.toString() !== req.user._id.toString()) {
-//       return res.status(403).json({ message: "Access denied. You can only delete your own products." });
-//     }
-
-//     await Product.findByIdAndUpdate(req.params.id, { isActive: false });
-//     res.json({ message: "Product deleted successfully" });
-//   } catch (error) {
-//     res.status(400).json({ message: "Error deleting product", error: error.message });
-//   }
-// });
-
-// Patch product (partial update)
-router.delete("./", authMiddleware, async (req, res) => {
-  // try {
-  //   const product = await Product.findById(req.params.id);
-  //   if (!product) {
-  //     return res.status(404).json({ message: "Product not found" });
-  //   }
-
-  //   // Check if user owns the product
-  //   if (product.createdBy.toString() !== req.user._id.toString()) {
-  //     return res.status(403).json({ message: "Access denied. You can only update your own products." });
-  //   }
-
-  //   const updatedProduct = await Product.findByIdAndUpdate(
-  //     req.params.id,
-  //     { $set: req.body },
-  //     { new: true, runValidators: true }
-  //   );
-
-  //   res.json({ message: "Product updated successfully", data: updatedProduct });
-  // } catch (error) {
-  //   res.status(400).json({ message: "Error updating product", error: error.message });
-  // }
-  // Implement partial update logic if needed. For now return not implemented.
-  res.status(501).json({ message: "Not implemented: patch product" });
+    
+    await Product.findByIdAndUpdate(req.params.id, { isActive: false });
+    res.json({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ message: "Error deleting product", error: error.message });
+  }
 });
+
+
 
 export default router;
