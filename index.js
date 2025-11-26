@@ -16,15 +16,12 @@ dotenv.config();
 
 const app = express();
 
-
 app.use(express.json());
 // Logger Middleware
 app.use(loggerMiddleware);
 // Public endpoints
 app.use("/api/auth", authRoutes);
 // Private endpoints 
-app.use(authMiddleware)
-app.use(authorizeRoles)
 app.use("/api/prducts",productRoutes)
 // Error Middleware
 app.use(errorMiddleware);
