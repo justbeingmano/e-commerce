@@ -23,9 +23,9 @@ app.use(loggerMiddleware);
 // Public endpoints
 app.use("/api/auth", authRoutes);
 // Private endpoints 
-app.use("/api/prducts",productRoutes)
 app.use(authMiddleware)
 app.use(authorizeRoles)
+app.use("/api/prducts",productRoutes)
 // Error Middleware
 app.use(errorMiddleware);
 
