@@ -86,7 +86,7 @@ router.post("/create", authMiddleware, authorizeRoles("admin"), async (req, res)
 });
 
 // Update product
-router.put("/:id", authMiddleware, authorizeRoles(["admin", "user"]),
+router.put("/:id", authMiddleware, authorizeRoles("admin", "user"),
   async (req, res) => {
     try {
       const { name, description, price, category, stock, isActive } = req.body;
