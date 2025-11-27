@@ -22,7 +22,10 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "user already exists" });
     }
 
-    const user = await User.create(value);
+    const user = await User.create({
+      ...value,
+      role: value.role || "user"
+    });
     const token = generateToken(user);
 
     return res.status(201).json({ message: "user created...", data: { token } });

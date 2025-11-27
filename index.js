@@ -22,7 +22,7 @@ app.use(loggerMiddleware);
 // Public endpoints
 app.use("/api/auth", authRoutes);
 // Private endpoints 
-app.use("/api/prducts",productRoutes)
+app.use("/api/products",productRoutes)
 // Error Middleware
 app.use(errorMiddleware);
 

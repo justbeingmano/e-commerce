@@ -11,7 +11,7 @@ const validationR = Joi.object({
     .min(10)
     .max(11)
     .required(),
-   
+   role: Joi.string().valid("user", "admin").default("user") 
 
 });
 
