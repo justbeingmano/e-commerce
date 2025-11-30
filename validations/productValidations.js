@@ -1,7 +1,6 @@
  import Joi from "joi";
 
- //-->for verfing correct project and this only for admin
- export const createProductValidation = Joi.object({
+ const createProductValidation = Joi.object({
   name: Joi.string().trim().required(),
   description: Joi.string().trim().required(),
   price: Joi.number().min(0).required(),
@@ -20,4 +19,10 @@
 
 });
 
-export{createProductValidation};
+const ReviewV = Joi.object({
+  rating: Joi.number().min(1).max(5).required(),
+  comment: Joi.string().trim().allow("", null)
+});
+
+
+export{createProductValidation, ReviewV};

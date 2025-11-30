@@ -20,7 +20,6 @@ const productSchema = new mongoose.Schema(
     stock: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
 
-    // ⭐ For ratings filter
     averageRating: { type: Number, default: 0 },
     totalReviews: { type: Number, default: 0 },
 

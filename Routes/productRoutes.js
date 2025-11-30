@@ -3,6 +3,7 @@ const router = express.Router();
 import { authMiddleware } from "../Middlewares/authMiddleware.js";
 import { authorizeRoles } from "../Middlewares/roleMiddleware.js";
 import { Product } from "../models/productModel.js";
+// import  addReview  from "../controllers/product.controller.js";
 // Get all products
 router.get("/", async (req, res) => {
   try {
@@ -135,4 +136,7 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Error ya 8ali", error: error.message });
   }
 });
+
+//add review
+// router.post("/:id/review", authorizeRoles("user"), addReview);
 export default router;
