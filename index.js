@@ -7,8 +7,6 @@ import authRoutes from './Routes/authRoutes.js';
 import productRoutes from './Routes/productRoutes.js';
 import errorMiddleware from './Middlewares/errorMiddleware.js';
 import loggerMiddleware from './Middlewares/loggerMiddleware.js';
-import { authMiddleware } from './Middlewares/authMiddleware.js';
-import { authorizeRoles } from './Middlewares/roleMiddleware.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

@@ -1,6 +1,6 @@
-import { Product } from "../models/product.model.js";
-import { addReviewValidation } from "../validations/product.validation.js";
-export const addReview = async (req, res) => {
+import { Product } from "../models/productModel.js";
+import { ReviewV } from "../validations/productValidations.js";
+ const addReview = async (req, res) => {
   try {
     const productId = req.params.id;
     const userId = req.user._id; 
@@ -47,3 +47,4 @@ export const addReview = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+export default addReview;
