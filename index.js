@@ -7,6 +7,8 @@ import authRoutes from './Routes/authRoutes.js';
 import productRoutes from './Routes/productRoutes.js';
 import errorMiddleware from './Middlewares/errorMiddleware.js';
 import loggerMiddleware from './Middlewares/loggerMiddleware.js';
+import orderRoutes from "./Routes/ordersRoutes.js"
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -23,6 +25,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products",productRoutes)
 // Error Middleware
 app.use(errorMiddleware);
+
+app.use("/api/orders", orderRoutes);
+
 
 
 // Serve static files from public directory
