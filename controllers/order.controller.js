@@ -55,3 +55,18 @@ export const getMyOrders = async (req, res) => {
   }
 };
 
+export const getAllOrders = async (req, res, next) => {
+  try {
+    const orders = await Order.find()
+      .populate("user", "name email")
+      .sort({ createdAt: -1 });
+
+      if (!orders || orders.length === 0) {
+        return res.status(404).json({ message: "NO ORDERS YA BOSS" });
+    }else
+    return res.status(200).json({ orders });
+
+  } catch (error) {
+    next(error);
+  }
+};

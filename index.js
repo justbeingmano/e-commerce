@@ -17,6 +17,7 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+app.use("/api/orders", orderRoutes);
 // Logger Middleware
 app.use(loggerMiddleware);
 // Public endpoints
@@ -26,7 +27,6 @@ app.use("/api/products",productRoutes)
 // Error Middleware
 app.use(errorMiddleware);
 
-app.use("/api/orders", orderRoutes);
 
 
 
