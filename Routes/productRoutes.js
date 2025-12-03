@@ -4,12 +4,16 @@ import { authMiddleware } from "../Middlewares/authMiddleware.js";
 import { authorizeRoles } from "../Middlewares/roleMiddleware.js";
 import { Product } from "../models/productModel.js";
 import addReview from "../controllers/product.controller.js";
+import { paginate } from "../utils/paginate.js";
 // Get all products
 router.get("/", async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json({ message: "Products retrieved successfully", data: products });
-  } catch (error) {
+try {
+    const result = await paginate(Product, {}, req.query);
+    res.json({
+      message: "Products retrieved successfully",
+      ...result,
+    });
+  }catch (error) {
     res.status(500).json({ message: "Error retrieving products", error: error.message });
   }
 });
@@ -52,16 +56,16 @@ router.get("/filter", async (req, res) => {
     if (sort === "ratingDesc") sortOption.averageRating = -1;
     if (sort === "ratingAsc") sortOption.averageRating = 1;
     if (sort === "newest") sortOption.createdAt = -1;
-    const products = await Product.find(filter).sort(sortOption);
-
-    res.json({
-      message: "Products reatrived successfully",
-      count: products.length,
-      data: products,
+    // use paginate helper
+    const result = await paginate(Product , filter , {
+      ...req.query,
+      sort:sortOption,
     });
-
-
-  } catch (error) {
+    res.json({
+      message: "Product retrieved successfully",
+      ...result,
+    });
+  }catch (error) {
     res.status(500).json({ message: "Error retrieving products", error: error.message });
   }
 });
