@@ -4,6 +4,7 @@ import {
   validationR,
   validationLogin,
 } from "../validations/userValidations.js";
+import { sendEmail } from "../utils/email.js";
 const registerVaildation = validationR;
 const loginVaildation = validationLogin;
 
@@ -25,6 +26,14 @@ export const  createUser = async (req, res) => {
       role: value.role || "user"
     });
     const token = generateToken(user);
+    await sendEmail({
+      email: user.email,
+      subject: "Welcome to Strategy Store 🎉",
+      message: `
+        <h1>Hello ${user.name}</h1>
+        <p>Thank you for registering in our store.</p>
+      `,
+    });
 
     return res.status(201).json({ message: "user created...", data: { user } });
   } catch (error) {
@@ -61,6 +70,14 @@ export const login = async (req,res) =>{
 
 
     const token = generateToken(user);
+    await sendEmail({
+      email: user.email,
+      subject: "Welcome to Strategy Store 🎉",
+      message: `
+        <h1>Hello ${user.name}</h1>
+        <p>Thank you for registering in our store.</p>
+      `,
+    });
 
 
     return res.json({

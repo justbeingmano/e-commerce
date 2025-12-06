@@ -1,42 +1,87 @@
 import { Order } from "../models/orderModel.js"
 import { Product } from "../models/productModel.js";
 
+
+const checkStockAvailability = async (items) => {
+  for (let item of items) {
+    const product = await Product.findById(item.product);
+
+    if (!product) {
+      return {
+        ok: false,
+        message: `Product not found with ID: ${item.product}`,
+      };
+    }
+
+    if (product.stock < item.quantity) {
+      return {
+        ok: false,
+        message: `Not enough stock for product: ${product.name}. Available: ${product.stock}`,
+      };
+    }
+  }
+
+  return { ok: true };
+};
+
+
+const reduceProductStock = async (items) => {
+  for (let item of items) {
+    const product = await Product.findById(item.product);
+
+    product.stock -= item.quantity;
+    await product.save();
+  }
+};
+
+
 export const createOrder = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
     const { items, shippingAddress, paymentMethod } = req.body;
 
     if (!items || items.length === 0) {
-      return res.status(400).json({ message: "Order must have at least one item" });
+      return res.status(400).json({ message: "Order items are required" });
     }
+
+    const stockCheck = await checkStockAvailability(items);
+
+    if (!stockCheck) {
+      return res.status(400).json({ message: "SOLD OUT ITEM"});
+    }
+
+    await reduceProductStock(items);
 
     let totalPrice = 0;
 
     for (let item of items) {
       const product = await Product.findById(item.product);
-      if (!product) {
-        return res.status(404).json({ message: `Product not found: ${item.product}` });
-      }
-
-      totalPrice += product.price * item.quantity;
+      totalPrice = product.price * item.quantity;
     }
 
-    const order = await Order.create({
+    const order = new Order({
       user: userId,
       items,
       totalPrice,
       shippingAddress,
       paymentMethod,
-      paymentStatus: "Pending",
-      orderStatus: "Pending",
     });
 
-    return res.status(201).json({ message: "Order created successfully", order });
+    await order.save();
 
+    return res.status(201).json({
+      message: "Order created successfully",
+      order,
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error", error: error.message });
+    console.error("Order creation error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };
+
 
 export const getMyOrders = async (req, res) => {
   try {
@@ -102,8 +147,6 @@ export const cancelOrder = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
-
-
 
 export const getAllOrders = async (req, res) => {
   try {
